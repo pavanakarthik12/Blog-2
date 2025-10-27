@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
+import { fetchRecentPosts } from '../utils/PostManager';
 import './Home.css';
 
 const Home = () => {
@@ -11,23 +10,10 @@ const Home = () => {
   const [recentPosts, setRecentPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch 5 most recent posts
+  // Fetch 5 most recent posts from Realtime Database
   useEffect(() => {
-    const postsQuery = query(
-      collection(db, 'posts'),
-      orderBy('createdAt', 'desc'),
-      limit(5)
-    );
-
-    const unsubscribe = onSnapshot(postsQuery, (snapshot) => {
-      const postsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+    const unsubscribe = fetchRecentPosts(5, (postsData) => {
       setRecentPosts(postsData);
-      setLoading(false);
-    }, (error) => {
-      console.error('Error fetching recent posts:', error);
       setLoading(false);
     });
 
@@ -44,7 +30,7 @@ const Home = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return 'Just now';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',

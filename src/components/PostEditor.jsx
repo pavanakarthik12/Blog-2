@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
+import { createPost, updatePost } from '../utils/PostManager';
 import './PostEditor.css';
 
 const PostEditor = ({ post, onClose, onSuccess }) => {
@@ -37,23 +36,13 @@ const PostEditor = ({ post, onClose, onSuccess }) => {
 
       if (post) {
         // Update existing post
-        const postRef = doc(db, 'posts', post.id);
-        await updateDoc(postRef, {
+        await updatePost(post.id, {
           title: title.trim(),
-          content: content.trim(),
-          updatedAt: serverTimestamp()
+          content: content.trim()
         });
       } else {
         // Create new post
-        await addDoc(collection(db, 'posts'), {
-          title: title.trim(),
-          content: content.trim(),
-          authorId: currentUser.uid,
-          authorEmail: currentUser.email,
-          authorName: currentUser.displayName || 'Anonymous',
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        });
+        await createPost(currentUser, title, content);
       }
 
       // Clear form

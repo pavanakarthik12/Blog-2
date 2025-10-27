@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
+import { fetchPosts, deletePost } from '../utils/PostManager';
 import PostEditor from '../components/PostEditor';
 import DeleteModal from '../components/DeleteModal';
 import './BlogFeed.css';
@@ -18,22 +17,10 @@ const BlogFeed = () => {
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, post: null });
   const [deleting, setDeleting] = useState(false);
 
-  // Fetch posts from Firestore in real-time
+  // Fetch posts from Realtime Database
   useEffect(() => {
-    const postsQuery = query(
-      collection(db, 'posts'),
-      orderBy('createdAt', 'desc')
-    );
-
-    const unsubscribe = onSnapshot(postsQuery, (snapshot) => {
-      const postsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+    const unsubscribe = fetchPosts((postsData) => {
       setPosts(postsData);
-      setLoading(false);
-    }, (error) => {
-      console.error('Error fetching posts:', error);
       setLoading(false);
     });
 
@@ -63,7 +50,7 @@ const BlogFeed = () => {
 
     try {
       setDeleting(true);
-      await deleteDoc(doc(db, 'posts', deleteModal.post.id));
+      await deletePost(deleteModal.post.id);
       setDeleteModal({ isOpen: false, post: null });
     } catch (error) {
       console.error('Error deleting post:', error);
@@ -87,7 +74,7 @@ const BlogFeed = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return 'Just now';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -208,7 +195,7 @@ const BlogFeed = () => {
                       )}
                     </div>
 
-                    {post.updatedAt && post.createdAt && post.updatedAt.seconds !== post.createdAt.seconds && (
+                    {post.updatedAt && post.createdAt && post.updatedAt !== post.createdAt && (
                       <div className="post-updated">
                         <small>Last updated: {formatDate(post.updatedAt)}</small>
                       </div>
