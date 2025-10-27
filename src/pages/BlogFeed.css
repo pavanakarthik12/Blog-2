@@ -1,0 +1,109 @@
+/* Blog Feed Page Styles */
+.blog-feed-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  padding: 2rem;
+}
+
+.blog-feed-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.blog-feed-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.blog-feed-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.blog-feed-header p {
+  font-size: 1.1rem;
+  color: #718096;
+}
+
+.blog-feed-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.welcome-message {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+}
+
+.welcome-message h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-message p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.placeholder-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+
+.placeholder-card {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.placeholder-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.placeholder-card h3 {
+  font-size: 1.8rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.placeholder-card p {
+  font-size: 1.1rem;
+  color: #718096;
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .blog-feed-page {
+    padding: 1.5rem;
+  }
+
+  .blog-feed-header h1 {
+    font-size: 2rem;
+  }
+
+  .welcome-message h2 {
+    font-size: 1.6rem;
+  }
+
+  .placeholder-card {
+    padding: 2rem 1.5rem;
+  }
+}
